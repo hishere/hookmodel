@@ -1,0 +1,24 @@
+name: 'build and publish apk'
+
+on: push
+
+jobs:
+  gradle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/chckout@v4
+      - name: setup jdk
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: gradle exec
+        run: chmod +x ./gradlew
+      - name: build apk
+        run: ./gradlew assembleRelease
+      - name: hub
+        uses: sangatdesai/release-apk@main
+        env:
+          GITHUB_TOKEN: ${{secrets.TOKEN}}
+          APP_FOLDER: app
+
