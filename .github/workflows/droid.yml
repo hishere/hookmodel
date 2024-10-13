@@ -16,8 +16,14 @@ jobs:
           java-version: 8
       - name: setup gradle
         uses: gradle/gradle-build-action@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: gradle exec
         run: chmod +x ./gradlew
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: build apk
         run: ./gradlew assembleRelease
       - name: hub
