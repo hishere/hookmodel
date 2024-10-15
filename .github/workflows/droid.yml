@@ -14,16 +14,17 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-      - name: 安装 gradle
-        uses: gradle/gradle-build-action@v2
+#      - name: 安装 gradle,没必要
+#        uses: gradle/gradle-build-action@v2
       - name: gradle exec
         run: chmod +x ./gradlew
       - run: ./gradlew build
       - name: build apk
         run: ./gradlew assembleRelease
       - name: hub
-        uses: sangatdesai/release-apk@main
+        uses: adi-itgg/action-release-debug-release-apk@master
         env:
           GITHUB_TOKEN: ${{secrets.TOKEN}}
           APP_FOLDER: app
+          RELEASE_TITLE: new build
 
