@@ -1,6 +1,9 @@
 name: 'build and publish apk'
 
-on: push
+on:
+  push:
+    tags:
+      - '*'
 
 jobs:
   gradle:
