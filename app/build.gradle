@@ -10,8 +10,8 @@ android {
         applicationId "app.nooneb.hookmodel"
         minSdk 23
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.4"
         resConfigs "zh-rCN"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
