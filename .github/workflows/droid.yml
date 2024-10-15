@@ -31,7 +31,7 @@ jobs:
           APP_FOLDER: app
           RELEASE_TITLE: new build
         with:
-          tag_name: ${github.ref}
+          tag_name: ${{github.ref}}
           asset_path: app/build/outputs/apk/debug/app-debug.apk
           asset_name: debug.apk
           asset_content_type: application/zip
