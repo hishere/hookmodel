@@ -22,9 +22,13 @@ jobs:
       - name: build apk
         run: ./gradlew assembleRelease
       - name: hub
-        uses: adi-itgg/action-release-debug-release-apk@master
+        uses: underwindfall/create-release-with-debugapk@v2.0.0
         env:
           GITHUB_TOKEN: ${{secrets.TOKEN}}
           APP_FOLDER: app
           RELEASE_TITLE: new build
-
+        with:
+          tag_name: v1.0.0
+          asset_path: app/build/outputs/apk/debug/app-debug.apk
+          asset_name: Example.apk
+          asset_content_type: application/zip
