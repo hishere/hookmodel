@@ -19,11 +19,11 @@ jobs:
       - name: gradle exec
         run: chmod +x ./gradlew
       - run: ./gradlew build
-#      - name: build apk
-#        run: ./gradlew assembleRelease
-#      - name: hub
-#        uses: sangatdesai/release-apk@main
-#        env:
-#          GITHUB_TOKEN: ${{secrets.TOKEN}}
-#          APP_FOLDER: app
+      - name: build apk
+        run: ./gradlew assembleRelease
+      - name: hub
+        uses: sangatdesai/release-apk@main
+        env:
+          GITHUB_TOKEN: ${{secrets.TOKEN}}
+          APP_FOLDER: app
 
