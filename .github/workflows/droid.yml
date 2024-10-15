@@ -1,0 +1,29 @@
+name: 'build and publish apk'
+
+on: push
+
+jobs:
+  gradle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 安装jdk
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: 安装 gradle
+        uses: gradle/gradle-build-action@v2
+      - name: gradle exec
+        run: chmod +x ./gradlew
+      - run: ./gradlew build
+#      - name: build apk
+#        run: ./gradlew assembleRelease
+#      - name: hub
+#        uses: sangatdesai/release-apk@main
+#        env:
+#          GITHUB_TOKEN: ${{secrets.TOKEN}}
+#          APP_FOLDER: app
+
