@@ -24,6 +24,9 @@ jobs:
       - run: ./gradlew build
       - name: build apk
         run: ./gradlew assembleRelease
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: hub
         uses: underwindfall/create-release-with-debugapk@v2.0.0
         env:
@@ -31,7 +34,7 @@ jobs:
           APP_FOLDER: app
           RELEASE_TITLE: new build
         with:
-          tag_name: ${{github.ref}}
+          tag_name: ${{steps.get_version.outputs.VERSION}}
           asset_path: app/build/outputs/apk/debug/app-debug.apk
           asset_name: debug.apk
           asset_content_type: application/zip
