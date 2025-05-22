@@ -1,4 +1,4 @@
-package cn.kaicity.apps.wifikeylook;
+package app.nooneb.hookmodel;
 
 public final class BuildConfig {
     // 构建调试模式标识

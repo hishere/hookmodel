@@ -1,4 +1,4 @@
-package cn.kaicity.apps.wifikeylook;
+package app.nooneb.hookmodel;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,6 +22,9 @@ import java.io.*;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.regex.*;
+import java.lang.ref.WeakReference;
+import android.content.ClipData;
+
 
 public class Main2 extends Activity {
     private static final String TAG = "Main2";
@@ -41,7 +44,7 @@ public class Main2 extends Activity {
         listView = findViewById(R.id.listView);
 
         try {
-            String configContent = RootUtils.readRootFile(getConfigPath());
+            String configContent = Utils.getPermission(getConfigPath());
             if (configContent.isEmpty()) {
                 showErrorToast("读取配置文件失败，请检查Root权限");
                 return;
