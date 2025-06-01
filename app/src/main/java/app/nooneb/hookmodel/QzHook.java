@@ -20,9 +20,9 @@ public class QzHook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         // 仅处理目标包名
-        if (!lpparam.packageName.equals(TARGET_PACKAGE)) {
-            return;
-        }
+        if (lpparam.packageName.equals(TARGET_PACKAGE)) {
+            
+        
 
         // Hook android.app.Activity类的onResume方法
         XposedHelpers.findAndHookMethod(
@@ -44,5 +44,7 @@ public class QzHook implements IXposedHookLoadPackage {
                 }
             }
         );
+        
+        }
     }
 }

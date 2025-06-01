@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="scope">
-        <item>com.xxx.yyy</item>
+        <item>com.sy.xkqz.tap</item>
     </string-array>
 </resources>
