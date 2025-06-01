@@ -40,7 +40,9 @@ public class QzHook implements IXposedHookLoadPackage {
                         activity.getClass().getSimpleName(),
                         System.currentTimeMillis()
                     );
-                    Log.d(TAG, logMsg); // 使用Log.d输出调试日志[6](@ref)
+                    // 替换 Log.d(TAG, logMsg) 为：
+                    XposedBridge.log(logMsg); // 直接输出到Xposed日志系统[6,4](@ref)
+
                 }
             }
         );
