@@ -3,6 +3,7 @@ package app.nooneb.hookmodel;
 
 import android.app.Activity;
 import android.util.Log;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
