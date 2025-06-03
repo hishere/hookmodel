@@ -30,7 +30,7 @@
             android:value="true" />
         <meta-data
             android:name="xposeddescription"
-            android:value="不知道是啥" />
+            android:value="侠客前传随机技能" />
         <meta-data
             android:name="xposedminversion"
             android:value="89" />

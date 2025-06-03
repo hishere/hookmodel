@@ -10,8 +10,8 @@ android {
         applicationId "app.nooneb.hookmodel"
         minSdk 23
         targetSdk 33
-        versionCode 6
-        versionName "1.6"
+        versionCode 9
+        versionName "1.9"
         resConfigs "zh-rCN"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -19,7 +19,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            shrinkResources false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
