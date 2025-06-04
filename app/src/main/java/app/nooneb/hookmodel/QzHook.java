@@ -164,9 +164,7 @@ public class QzHook implements IXposedHookLoadPackage {
                 int npcId = npcObj.get("iNpcID").asInt();
                 
                 if (teammateIds.contains(npcId)) {
-                    // 添加95暴击，4格移动
-                    npcObj.put("iMoveStep", 4);
-                    npcObj.put("iCri", 95);
+                    
                     
                     // 添加技能
                     if (teammateSkillMap.containsKey(npcId)) {
@@ -200,7 +198,9 @@ public class QzHook implements IXposedHookLoadPackage {
                             isFirst = false; // 后续内功标记为非激活
                         }
                     }
-
+                    // 添加95暴击，4格移动
+                    npcObj.put("iMoveStep", 4);
+                    npcObj.put("iCri", 95);
                 }
             }
 
