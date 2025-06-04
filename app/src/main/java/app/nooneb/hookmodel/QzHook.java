@@ -165,8 +165,9 @@ public class QzHook implements IXposedHookLoadPackage {
                 
                 if (teammateIds.contains(npcId)) {
                     // 添加95暴击，4格移动
-                    npcObj.put("iCri", 95);
                     npcObj.put("iMoveStep", 4);
+                    npcObj.put("iCri", 95);
+                    
                     // 添加技能
                     if (teammateSkillMap.containsKey(npcId)) {
                         ArrayNode routineList = npcObj.putArray("RoutineList");
