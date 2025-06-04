@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:id="@+id/t1"
-        android:text="hello hook"
+        android:text="hello hook\n"
         android:textIsSelectable="true"
         android:layout_height="wrap_content"/>
 </LinearLayout>

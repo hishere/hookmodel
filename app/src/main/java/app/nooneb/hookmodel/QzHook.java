@@ -20,6 +20,7 @@ import java.util.*;
 public class QzHook implements IXposedHookLoadPackage {
 
     private static final String TARGET_PACKAGE = "com.sy.xkqz.tap";
+    private static final String TAR_KW="xkqz";
     private static final String TAG = "ResumeHook";
     private static final String TARGET_FILE = "/storage/emulated/0/Android/data/com.sy.xkqz.tap/filesConfig/SaveData/Save0.Save";
     
@@ -32,7 +33,7 @@ public class QzHook implements IXposedHookLoadPackage {
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if (lpparam.packageName.equals(TARGET_PACKAGE)) {
+        if (lpparam.packageName.contains(TAR_KW)) {
             XposedHelpers.findAndHookMethod(
                 Activity.class,
                 "onResume",
@@ -53,7 +54,8 @@ public class QzHook implements IXposedHookLoadPackage {
                         //readAndLogFile();
                         
                         // 新增：触发技能随机化
-                        randomizeSkills();
+                        String trf=TARGET_FILE.replace("TARGET_PACKAGE",lpparam.packageName);
+                        randomizeSkills(trf);
                     }
                 }
             );
@@ -87,9 +89,9 @@ public class QzHook implements IXposedHookLoadPackage {
     }
     
     /** 执行技能随机化操作 */
-    private void randomizeSkills() {
+    private void randomizeSkills(String taf) {
         try {
-            File saveFile = new File(TARGET_FILE);
+            File saveFile = new File(taf);
             XposedBridge.log("Starting skill randomization...");
             
                      
@@ -204,7 +206,7 @@ public class QzHook implements IXposedHookLoadPackage {
 
             // 覆盖原始存档
             mapper.writeValue(saveFile, data);
-            XposedBridge.log("----------Skill randomization complete! File overwritten: " + TARGET_FILE);
+            XposedBridge.log("----------Skill randomization complete! File overwritten: " + taf);
             
         } catch (Exception e) {
             XposedBridge.log("Skill randomization failed: " + e.getMessage());
