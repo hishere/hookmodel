@@ -114,29 +114,30 @@ public class QzHook2 implements IXposedHookLoadPackage {
             for (JsonNode node : teammateList) {
                 teammateIds.add(node.asInt());
             }
+            List<Integer> backupTeammateIds = new ArrayList<>(teammateIds);
             // 新增：补充队友逻辑（仅添加ID）
-if (teammateIds.size() < 9) {
-    // 创建可选的队友池（排除已有队友）
-    List<Integer> candidatePool = new ArrayList<>(PRESET_TEAMMATE_IDS);
-    candidatePool.removeAll(teammateIds); // 去重[8,9](@ref)
-    Collections.shuffle(candidatePool);    // 随机打乱[5](@ref)
-    
-    // 补充到9人
-    int needed = 9 - teammateIds.size();
-    for (int i = 0; i < needed && !candidatePool.isEmpty(); i++) {
-        int newTeammateId = candidatePool.remove(0);
-        teammateIds.add(newTeammateId);
-        teammateList.add(newTeammateId); // 直接写入存档
-    }
-}
-            int teammateCount = teammateIds.size();
+            if (teammateIds.size() < 9) {
+                // 创建可选的队友池（排除已有队友）
+                List<Integer> candidatePool = new ArrayList<>(PRESET_TEAMMATE_IDS);
+                candidatePool.removeAll(teammateIds); // 去重[8,9](@ref)
+                Collections.shuffle(candidatePool);    // 随机打乱[5](@ref)
+                
+                // 补充到9人
+                int needed = 9 - teammateIds.size();
+                for (int i = 0; i < needed && !candidatePool.isEmpty(); i++) {
+                    int newTeammateId = candidatePool.remove(0);
+                    teammateIds.add(newTeammateId);
+                    teammateList.add(newTeammateId); // 直接写入存档
+                }
+            }
+            int teammateCount = backupTeammateIds.size();
             
             // 清空队友现有技能和内功
             ArrayNode npcList = (ArrayNode) data.get("m_NpcList");
             for (JsonNode npc : npcList) {
                 ObjectNode npcObj = (ObjectNode) npc;
                 int npcId = npcObj.get("iNpcID").asInt();
-                if (teammateIds.contains(npcId)) {
+                if (backupTeammateIds.contains(npcId)) {
                     npcObj.putArray("RoutineList");  // 清空技能
                     npcObj.putArray("NeigongList");  // 清空内功
                 }
@@ -181,7 +182,7 @@ if (teammateIds.size() < 9) {
                 ObjectNode npcObj = (ObjectNode) npc;
                 int npcId = npcObj.get("iNpcID").asInt();
                 
-                if (teammateIds.contains(npcId)) {
+                if (backupTeammateIds.contains(npcId)) {
                     
                     // 添加95暴击，4格移动
                     npcObj.put("iMoveStep", 4);
