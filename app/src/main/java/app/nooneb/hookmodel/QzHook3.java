@@ -96,7 +96,6 @@ public class QzHook3 implements IXposedHookLoadPackage {
         try {
             File saveFile = new File(taf);
             XposedBridge.log("Starting skill randomization...");
-            
 // 读取游戏存档
 ObjectMapper mapper = new ObjectMapper();
 JsonNode data = mapper.readTree(saveFile);
@@ -105,13 +104,12 @@ JsonNode data = mapper.readTree(saveFile);
 List<Integer> PRESET_TEAMMATE_IDS = new ArrayList<>();
 ArrayNode npcList = (ArrayNode) data.get("m_NpcList");
 for (JsonNode npc : npcList) {
-    // 检查是否满足条件：存在 iMaxHp 字段且值 > 5000
     if (npc.has("iMaxHp") && npc.get("iMaxHp").asInt() > 5000) {
         PRESET_TEAMMATE_IDS.add(npc.get("iNpcID").asInt());
     }
 }
 
-// 2. 处理队友列表逻辑（保留原逻辑）
+// 2. 处理队友列表逻辑
 List<Integer> newTeammateIds = new ArrayList<>();
 ArrayNode teammateList = (ArrayNode) data.get("m_TeammateList");
 for (JsonNode node : teammateList) {
@@ -121,23 +119,26 @@ for (JsonNode node : teammateList) {
 // 随机补充队友（限制最多6人）
 if (newTeammateIds.size() < 9) {
     List<Integer> availableIds = new ArrayList<>(PRESET_TEAMMATE_IDS);
-    availableIds.removeAll(newTeammateIds); // 排除已有ID
+    availableIds.removeAll(newTeammateIds);
     
     Collections.shuffle(availableIds);
-    int needed = Math.min(9 - newTeammateIds.size(), 6); // 双重限制
+    int needed = Math.min(9 - newTeammateIds.size(), 6);
     
     for (int i = 0; i < needed && !availableIds.isEmpty(); i++) {
         newTeammateIds.add(availableIds.remove(0));
     }
 }
 
-// 3. 更新存档数据
+// 3. 更新存档数据（已移除双冒号写法）
 ArrayNode newTeammateArray = mapper.createArrayNode();
-newTeammateIds.forEach(newTeammateArray::add);
+for (Integer id : newTeammateIds) {
+    newTeammateArray.add(id);
+}
 ((ObjectNode) data).set("m_TeammateList", newTeammateArray);
 
-// 4. 覆盖存档（使用NIO高效写入[11](@ref)）
-Files.write(saveFile.toPath(), mapper.writeValueAsBytes(data)); 
+// 4. 覆盖存档
+Files.write(saveFile.toPath(), mapper.writeValueAsBytes(data));
+
 
             
             

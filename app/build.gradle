@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "app.nooneb.hookmodel"
-        minSdk 24
+        minSdk 23
         targetSdk 33
         versionCode 12
         versionName "2.0"
