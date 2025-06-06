@@ -17,7 +17,7 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.util.*;
 
-public class QzHook implements IXposedHookLoadPackage {
+public class QzHook2 implements IXposedHookLoadPackage {
 
     private static final String TARGET_PACKAGE = "com.sy.xkqz.tap";
     private static final String TAR_KW="xkqz";
