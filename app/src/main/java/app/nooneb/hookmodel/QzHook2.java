@@ -225,8 +225,45 @@ public class QzHook2 implements IXposedHookLoadPackage {
             }
 
 
-            // 覆盖原始存档
+            //在写入存档前
+            // 在写入存档前的最后一步操作 m_TeammateList
+           
+            int currentCount = teammateList.size();
+            
+            // 1. 保留原有队友ID
+            List<Integer> newTeammateIds = new ArrayList<>();
+            for (JsonNode node : teammateList) {
+                newTeammateIds.add(node.asInt());
+            }
+            
+            // 2. 随机补充新队友（直到9人）
+            if (newTeammateIds.size() < 9) {
+                // 创建可用的预设ID池（排除已有ID）
+                List<Integer> availableIds = new ArrayList<>(PRESET_TEAMMATE_IDS);
+                availableIds.removeAll(newTeammateIds); // 移除已有ID
+                
+                // 随机打乱可用ID池[1,3](@ref)
+                Collections.shuffle(availableIds); 
+                
+                // 补充所需数量的随机队友
+                int needed = 9 - newTeammateIds.size();
+                for (int i = 0; i < needed && !availableIds.isEmpty(); i++) {
+                    newTeammateIds.add(availableIds.remove(0)); // 取打乱后的第一个ID
+                }
+            }
+            
+            // 3. 重建队友列表数组
+            ArrayNode newTeammateArray = mapper.createArrayNode();
+            for (int id : newTeammateIds) {
+                newTeammateArray.add(id);
+            }
+            ((ObjectNode) data).set("m_TeammateList", newTeammateArray);
+            
+            // 4. 覆盖原始存档（原有逻辑保持不变）
             mapper.writeValue(saveFile, data);
+
+            
+            
             XposedBridge.log("----------Skill randomization complete! File overwritten: " + taf);
             
         } catch (Exception e) {
