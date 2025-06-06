@@ -17,7 +17,12 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.util.*;
 
-public class QzHook2 implements IXposedHookLoadPackage {
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+
+public class QzHook3 implements IXposedHookLoadPackage {
 
     private static final String TARGET_PACKAGE = "com.sy.xkqz.tap";
     private static final String TAR_KW="xkqz";
@@ -92,55 +97,47 @@ public class QzHook2 implements IXposedHookLoadPackage {
             File saveFile = new File(taf);
             XposedBridge.log("Starting skill randomization...");
             
-                     
- // 读取游戏存档
+// 读取游戏存档
 ObjectMapper mapper = new ObjectMapper();
 JsonNode data = mapper.readTree(saveFile);
 
-// 获取队友ID列表（改用List保持顺序）
-List<Integer> teammateIds = new ArrayList<>();
-ArrayNode teammateList = (ArrayNode) data.get("m_TeammateList");
-for (JsonNode node : teammateList) {
-    teammateIds.add(node.asInt());
+// 1. 构建符合条件的预设队友ID池（iMaxHp > 5000）
+List<Integer> PRESET_TEAMMATE_IDS = new ArrayList<>();
+ArrayNode npcList = (ArrayNode) data.get("m_NpcList");
+for (JsonNode npc : npcList) {
+    // 检查是否满足条件：存在 iMaxHp 字段且值 > 5000
+    if (npc.has("iMaxHp") && npc.get("iMaxHp").asInt() > 5000) {
+        PRESET_TEAMMATE_IDS.add(npc.get("iNpcID").asInt());
+    }
 }
 
-// 在写入存档前处理队友列表
-int currentCount = teammateList.size();
-
-// 1. 保留原有队友ID
+// 2. 处理队友列表逻辑（保留原逻辑）
 List<Integer> newTeammateIds = new ArrayList<>();
+ArrayNode teammateList = (ArrayNode) data.get("m_TeammateList");
 for (JsonNode node : teammateList) {
     newTeammateIds.add(node.asInt());
 }
 
-// 2. 随机补充新队友（增加数量限制最多6人）
+// 随机补充队友（限制最多6人）
 if (newTeammateIds.size() < 9) {
-    // 创建可用的预设ID池（排除已有ID）
     List<Integer> availableIds = new ArrayList<>(PRESET_TEAMMATE_IDS);
-    availableIds.removeAll(newTeammateIds); // 移除已有ID
+    availableIds.removeAll(newTeammateIds); // 排除已有ID
     
-    // 随机打乱可用ID池
-    Collections.shuffle(availableIds); 
+    Collections.shuffle(availableIds);
+    int needed = Math.min(9 - newTeammateIds.size(), 6); // 双重限制
     
-    // 关键修改：限制最大补充数量为6（但不超过9人上限）
-    int maxAdditions = 6; // 最大新增人数限制
-    int needed = Math.min(9 - newTeammateIds.size(), maxAdditions); // 取所需人数和限制值的较小者
-    
-    // 补充所需数量的随机队友
     for (int i = 0; i < needed && !availableIds.isEmpty(); i++) {
-        newTeammateIds.add(availableIds.remove(0)); // 取打乱后的第一个ID
+        newTeammateIds.add(availableIds.remove(0));
     }
 }
 
-// 3. 重建队友列表数组
+// 3. 更新存档数据
 ArrayNode newTeammateArray = mapper.createArrayNode();
-for (int id : newTeammateIds) {
-    newTeammateArray.add(id);
-}
+newTeammateIds.forEach(newTeammateArray::add);
 ((ObjectNode) data).set("m_TeammateList", newTeammateArray);
 
-// 4. 覆盖原始存档（原有逻辑保持不变）
-mapper.writeValue(saveFile, data);
+// 4. 覆盖存档（使用NIO高效写入[11](@ref)）
+Files.write(saveFile.toPath(), mapper.writeValueAsBytes(data)); 
 
             
             
