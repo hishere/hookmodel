@@ -17,9 +17,6 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.util.*;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 
 public class QzHook3 implements IXposedHookLoadPackage {
@@ -137,8 +134,7 @@ for (Integer id : newTeammateIds) {
 ((ObjectNode) data).set("m_TeammateList", newTeammateArray);
 
 // 4. 覆盖存档
-Files.write(saveFile.toPath(), mapper.writeValueAsBytes(data));
-
+mapper.writeValue(saveFile, data);
 
             
             
