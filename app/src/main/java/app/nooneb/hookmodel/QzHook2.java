@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.util.*;
+import android.content.Context;
 
 public class QzHook2 implements IXposedHookLoadPackage {
 
