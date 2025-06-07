@@ -57,34 +57,24 @@ public class QzHook2 implements IXposedHookLoadPackage {
                         //randomizeSkills(trf);
                         
                         XposedHelpers.findAndHookMethod(
-            "com.tds.common.utils.FileUtils", // 完整类名
-            lpparam.classLoader,             // 使用目标App的ClassLoader
-            "loadAssetTextAsString",        // 方法名
-            android.content.Context.class,   // 参数1类型
-            String.class,                   // 参数2类型
-            new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    // 获取参数值
-                    Context context = (Context) param.args[0];
-                    String assetPath = (String) param.args[1];
-                    
-                    // 打印输入参数
-                    XposedBridge.log("[HOOK] 调用 loadAssetTextAsString()");
-                    XposedBridge.log("[HOOK] Asset路径: " + assetPath);
-                    XposedBridge.log("[HOOK] 上下文类: " + context.getClass().getName());
-                }
-
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    // 获取返回值
-                    String result = (String) param.getResult();
-                    
-                    // 打印返回值
-                    XposedBridge.log("[HOOK] 返回内容: " + (result != null ? result : "null"));
-                }
+    "com.tds.common.localize.LocalizeManager", 
+    lpparam.classLoader,
+    "configSDKLocalize", 
+    String.class, Context.class, String.class, boolean.class,
+    new XC_MethodHook() {
+        @Override
+        protected void beforeHookedMethod(MethodHookParam param) {
+            // 打印所有参数
+            for (int i = 0; i < param.args.length; i++) {
+                XposedBridge.log("参数[" + i + "] = " + param.args[i]);
             }
-        );
+            // 打印特定参数（例如第一个String参数）
+            String arg0 = (String) param.args[0];
+            XposedBridge.log("修改前参数0: " + arg0);
+        }
+    }
+);
+
                         
                     }
                 }
