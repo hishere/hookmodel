@@ -56,7 +56,13 @@ public class QzHook2 implements IXposedHookLoadPackage {
                         //String trf=TARGET_FILE.replace("TARGET_PACKAGE",lpparam.packageName);
                         //randomizeSkills(trf);
                         
-                        XposedHelpers.findAndHookMethod(
+                        
+
+                        
+                    }
+                }
+            );
+            XposedHelpers.findAndHookMethod(
     "com.tds.common.localize.LocalizeManager", 
     lpparam.classLoader,
     "configSDKLocalize", 
@@ -74,11 +80,35 @@ public class QzHook2 implements IXposedHookLoadPackage {
         }
     }
 );
-
-                        
-                    }
+XposedHelpers.findAndHookMethod(
+            "com.tds.common.utils.FileUtils", // 完整类名
+            lpparam.classLoader,             // 使用目标App的ClassLoader
+            "loadAssetTextAsString",        // 方法名
+            android.content.Context.class,   // 参数1类型
+            String.class,                   // 参数2类型
+            new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    // 获取参数值
+                    Context context = (Context) param.args[0];
+                    String assetPath = (String) param.args[1];
+                    
+                    // 打印输入参数
+                    XposedBridge.log("[HOOK] 调用 loadAssetTextAsString()");
+                    XposedBridge.log("[HOOK] Asset路径: " + assetPath);
+                    XposedBridge.log("[HOOK] 上下文类: " + context.getClass().getName());
                 }
-            );
+
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    // 获取返回值
+                    String result = (String) param.getResult();
+                    
+                    // 打印返回值
+                    XposedBridge.log("[HOOK] 返回内容: " + (result != null ? result : "null"));
+                }
+            }
+        );
         }
     }
 
