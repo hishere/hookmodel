@@ -133,11 +133,11 @@ public class QzHook implements IXposedHookLoadPackage {
                 skillGroups.add(shuffledSkills.subList(i, endIndex));
             }
             
-            // 新增：为每个队友分配6个内功
-            int requiredNeis = teammateCount * 6;
+            // 新增：为每个队友分配4个内功
+            int requiredNeis = teammateCount * 4;
             List<List<Integer>> neiGroups = new ArrayList<>();
-            for (int i = 0; i < requiredNeis; i += 6) {
-                int endIndex = Math.min(i + 6, shuffledNeis.size());
+            for (int i = 0; i < requiredNeis; i += 4) {
+                int endIndex = Math.min(i + 4, shuffledNeis.size());
                 if (i >= endIndex) break;  // 避免空组
                 neiGroups.add(shuffledNeis.subList(i, endIndex));
             }
@@ -165,10 +165,11 @@ public class QzHook implements IXposedHookLoadPackage {
                 
                 if (teammateIds.contains(npcId)) {
                     
-                    // 添加95暴击，4格移动
-                    npcObj.put("iMoveStep", 4);
+                    // 添加95暴击，5格移动
+                    npcObj.put("iMaxHp", 21888);
+                    npcObj.put("iMaxSp", 2888);
+                    npcObj.put("iMoveStep", 5);
                     npcObj.put("iCri", 95);
-                    
                     // 添加技能
                     if (teammateSkillMap.containsKey(npcId)) {
                         ArrayNode routineList = npcObj.putArray("RoutineList");

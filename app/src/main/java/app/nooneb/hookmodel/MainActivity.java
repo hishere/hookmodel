@@ -14,6 +14,6 @@ public class MainActivity extends AppCompatActivity {
         
         TextView textView = findViewById(R.id.t1); // Java
         
-        textView.append("版本2.0，随机队友\n");
+        textView.append("版本3.0，最终版，不再更新，随机技能6+内功4，血2w，内3000，暴击95，足以横行武侠界\n");
     }
 }
